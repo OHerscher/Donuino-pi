@@ -1,6 +1,6 @@
 import MySQLdb
 import serial
-ser = serial.Serial('/dev/ttyACM0', baudrate=115200, timeout=20)
+ser = serial.Serial('/dev/ttyACM0', baudrate=57600, timeout=10)
 db = MySQLdb.connect('localhost', 'Dronuino', 'R6vf5FcdFwMj9JPF', 'GPS')
 cur = db.cursor()
 while 1:
@@ -17,10 +17,16 @@ while 1:
 	lon = float(list[1])
 	alt = float(list[2])
 	vit = float(list[3])
-	print lat, lon, alt, vit
+	print type(lat)
+	print type(lon)
+	print type(alt)
+	print type(vit)
 	try:
-		cur.execute("INSERT INTO Data(Lat, Lon, Alt, Vit) VALUES (lat, lon, alt, vit);")
+		SQL = "INSERT INTO Data VALUES ('%f', '%f', '%f', '%f')" % (lat, lon, alt, vit)
+		print SQL
+		cur.execute(SQL)
 		db.commit()
 	except:
 		db.rollback()
 db.close()
+
